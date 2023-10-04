@@ -1,15 +1,15 @@
 //функция 1
-function strLenght(str, number) {
+function isValidLength(str, number) {
   return str.length <= number;
 }
-strLenght('fff',4);
+isValidLength('fff',4);
 
 //функция 2
 function palindrom(stro){
   const normalString = stro.replaceAll(' ','').toUpperCase();
   let strnew ='';
 
-  for(normalString.length-1; normalString.length>0; normalString.length--){
+  for(let i = normalString.length-1; i>0; normalString.length--){
     strnew += normalString[normalString.length];
   }
   if (strnew === normalString){
