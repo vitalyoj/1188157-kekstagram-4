@@ -66,6 +66,7 @@ const onCancelButtonClick = () => {
 };
 
 const renderPictureDetails = ({ url, likes, description }) => {
+  // атрибуту src элемента с классом big-picture присваивают новое значение url
   bigPicture.querySelector('.big-picture__img img').src = url;
   bigPicture.querySelector('.big-picture__img img').alt = description;
   bigPicture.querySelector('.likes-count').textContent = likes;
