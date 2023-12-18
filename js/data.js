@@ -1,4 +1,4 @@
-import {getRandomInt, getRandomArrayElement, createIdGenerator} from './util.js';
+import {getRandomInteger, getRandomArrayElement, createIdGenerator} from './util.js';
 
 const PICTURE_COUNT = 25;
 const AVATAR_COUNT = 6;
@@ -55,13 +55,13 @@ const NAMES = [
 const generateCommentId = createIdGenerator();
 
 const createMessage = () =>
-  Array.from({length: getRandomInt(1,2)}, () =>
+  Array.from({length: getRandomInteger(1,2)}, () =>
     getRandomArrayElement(COMMENT_LINES)
   ).join(' ');
 
 const createComment = () => ({
   id: generateCommentId(),
-  avatar: `img/avatar-${getRandomInt(1, AVATAR_COUNT)}.svg`,
+  avatar: `img/avatar-${getRandomInteger(1, AVATAR_COUNT)}.svg`,
   message: createMessage(),
   name: getRandomArrayElement(NAMES),
 });
@@ -70,9 +70,9 @@ const createPicture = (index) => ({
   id: index,
   url: `photos/${index}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
-  likes: getRandomInt(LIKES_MIN_COUNT, LIKES_MAX_COUNT),
+  likes: getRandomInteger(LIKES_MIN_COUNT, LIKES_MAX_COUNT),
   comments: Array.from(
-    {length:getRandomInt(0, COMMENT_COUNT)},
+    {length:getRandomInteger(0, COMMENT_COUNT)},
     createComment
   ),
 });
