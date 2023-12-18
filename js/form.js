@@ -24,6 +24,7 @@ const showModal = () => {
 
 const hideModal = () => {
   form.reset();
+
   pristine.reset();
   overlay.classList.add('hidden');
   body.classList.remove('modal-open');
