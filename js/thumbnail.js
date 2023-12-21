@@ -17,6 +17,13 @@ const createThumbnail = (picture) => {
 };
 
 const renderThumbnails = (pictures) => {
+  const oldPictures = document.querySelectorAll('.picture');
+  if (oldPictures.length) {
+    oldPictures.forEach((oldPicture) => {
+      oldPicture.remove();
+    });
+  }
+
   const fragment = document.createDocumentFragment();
   pictures.forEach((picture) => {
     const thumbnail = createThumbnail(picture);
