@@ -7,11 +7,15 @@ import './upload-images.js';
 
 setupForm();
 
-try {
-  const data = await getData();
-  const debouncedRenderGallery = debounce(renderGallery);
-  initFilters(data, debouncedRenderGallery);
-  renderGallery(getFilteredPictures());
-} catch (err) {
-  showAlert(err.message);
+async function rendersGallery() {
+  try {
+    const data = await getData();
+    const debouncedRenderGallery = debounce(renderGallery);
+    initFilters(data, debouncedRenderGallery);
+    renderGallery(getFilteredPictures());
+  } catch (err) {
+    showAlert(err.message);
+  }
 }
+
+rendersGallery();

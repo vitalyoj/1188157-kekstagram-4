@@ -15,7 +15,6 @@ const ErrorText = {
   SEND_DATA: 'Не удалось отправить форму. Попробуйте еще раз',
 };
 
-// Функция
 const load = (route, errorText, method = Method.GET, body = null) =>
   fetch(`${BASE_URL}${route}`, { method, body })
     .then((response) => {
