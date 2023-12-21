@@ -73,6 +73,7 @@ const createPicture = (index) => ({
   likes: getRandomInteger(LIKES_MIN_COUNT, LIKES_MAX_COUNT),
   comments: Array.from(
     {length:getRandomInteger(0, COMMENT_COUNT)},
+    // тут не нужны () для вызова?
     createComment
   ),
 });

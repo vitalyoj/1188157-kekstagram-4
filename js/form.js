@@ -1,11 +1,14 @@
-const MAX_HASHTAG_COUNT = 5;
+import { resetScale } from './scale.js';
+import { resetEffects } from './effect.js';
 
+const MAX_HASHTAG_COUNT = 5;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAG_ERROR_TEXT = 'Неправильно заполнены хэштеги';
 
 const form = document.querySelector('.img-upload__form');
 const overlay = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
-const cancelButton = document.querySelector('#upload__cancel');
+const cancelButton = document.querySelector('#upload-cancel');
 const fileField = document.querySelector('#upload-file');
 const hashtagField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
@@ -24,7 +27,8 @@ const showModal = () => {
 
 const hideModal = () => {
   form.reset();
-
+  resetScale();
+  resetEffects();
   pristine.reset();
   overlay.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -50,6 +54,8 @@ const onFileInputChange = () => {
   showModal();
 };
 
+const isValidTag = (tag) => VALID_SYMBOLS.test(tag);
+
 const hasValidCount = (tags) => tags.length <= MAX_HASHTAG_COUNT;
 
 const hasUniqueTags = (tags) => {
@@ -62,20 +68,24 @@ const validateTags = (value) => {
     .trim()
     .split(' ')
     .filter((tag) => tag.trim().length);
-  return hasValidCount(tags) && hasUniqueTags(tags) && tags.every();
+  return hasValidCount(tags) && hasUniqueTags(tags) && tags.every(isValidTag);
 };
-
-pristine.addValidator (
-  hashtagField,
-  validateTags,
-  TAG_ERROR_TEXT
-);
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
   pristine.validate();
 };
 
-fileField.addEventListener('change', onFileInputChange);
-cancelButton.addEventListener('click', onCancelButtonClick);
-form.addEventListener('submit', onFormSubmit);
+const setupForm = () => {
+  fileField.addEventListener('change', onFileInputChange);
+  cancelButton.addEventListener('click', onCancelButtonClick);
+  form.addEventListener('submit', onFormSubmit);
+  pristine.addValidator(
+
+    hashtagField,
+    validateTags,
+    TAG_ERROR_TEXT
+  );
+};
+
+export { setupForm };
