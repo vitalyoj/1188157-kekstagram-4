@@ -124,3 +124,4 @@ effectsElement.addEventListener('change', onEffectsChange);
 sliderElement.noUiSlider.on('update', onSliderUpdate);
 
 export { resetEffects };
+

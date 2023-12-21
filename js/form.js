@@ -1,5 +1,7 @@
 import { resetScale } from './scale.js';
 import { resetEffects } from './effect.js';
+import { sendData } from './api.js';
+import { showSuccessMessage, showErrorMessage } from './messages.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -22,7 +24,8 @@ const pristine = new Pristine(form, {
 const showModal = () => {
   overlay.classList.remove('hidden');
   body.classList.add('modal-open');
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.body.addEventListener('keydown', onDocumentKeydown);
+  resetScale();
 };
 
 const hideModal = () => {
@@ -32,15 +35,18 @@ const hideModal = () => {
   pristine.reset();
   overlay.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.body.removeEventListener('keydown', onDocumentKeydown);
 };
 
 const isTextFieldFocused = () =>
   document.activeElement === hashtagField ||
   document.activeElement === commentField;
 
+const existMessageElement = () =>
+  document.querySelector('.error');
+
 function onDocumentKeydown(evt) {
-  if (evt.key === 'Escape' && !isTextFieldFocused()) {
+  if (evt.key === 'Escape' && !isTextFieldFocused() && !existMessageElement()) {
     evt.preventDefault();
     hideModal();
   }
@@ -71,17 +77,47 @@ const validateTags = (value) => {
   return hasValidCount(tags) && hasUniqueTags(tags) && tags.every(isValidTag);
 };
 
-const onFormSubmit = (evt) => {
+const blockButton = () => {
+  const blockBtn = document.getElementById('upload-submit');
+  blockBtn.textContent = 'Загружаем...';
+  blockBtn.disable = true;
+  blockBtn.setAttribute('disabled', 'true');
+};
+
+const unblockButton = () => {
+  const blockBtn = document.getElementById('upload-submit');
+  blockBtn.textContent = 'Опубликовать';
+  blockBtn.disable = false;
+  blockBtn.removeAttribute('disabled');
+};
+
+const onFormSubmit = async(evt) => {
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+  if (isValid) {
+    const formData = new FormData(evt.target);
+
+    try {
+      blockButton();
+      await sendData(formData);
+      unblockButton();
+      hideModal();
+      showSuccessMessage();
+    } catch {
+      showErrorMessage();
+      unblockButton();
+    }
+  }
 };
 
 const setupForm = () => {
   fileField.addEventListener('change', onFileInputChange);
   cancelButton.addEventListener('click', onCancelButtonClick);
   form.addEventListener('submit', onFormSubmit);
+  overlay.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
   pristine.addValidator(
-
     hashtagField,
     validateTags,
     TAG_ERROR_TEXT
@@ -89,3 +125,4 @@ const setupForm = () => {
 };
 
 export { setupForm };
+
