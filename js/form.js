@@ -103,7 +103,7 @@ const onFormSubmit = async(evt) => {
       unblockButton();
       hideModal();
       showSuccessMessage();
-    } catch {
+    } catch (error){
       showErrorMessage();
       unblockButton();
     }
